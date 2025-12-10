@@ -5,7 +5,7 @@ import seaborn as sns
 import os
 import folium
 import webbrowser
-import  chart_studio.plotly as py
+import chart_studio.plotly as py
 import plotly.graph_objs as go
 import plotly.express as px
 
@@ -35,12 +35,24 @@ data = df.sort_index(ascending= False).reset_index()
 
 data.drop('index', axis=1, inplace=True)
 # print(data.columns)
+print(data.shape)
 
-plt.figure(figsize=(20,12))
+bitcoin_sample = data[0:50]
+print(bitcoin_sample)
 
-for index , col in enumerate (['Open', 'High', 'Low', 'Close'], 1):
-    plt.subplot(2,2, index)
-    plt.plot(df['Date'], df[col])
-    plt.title(col)
+trace = go.Candlestick(x=bitcoin_sample['Date'],
+                       high = bitcoin_sample['High'],
+                       open = bitcoin_sample['Open'],
+                       close = bitcoin_sample['Close'],
+                       low = bitcoin_sample['Low'])
 
-plt.show()
+candle_data = [trace]
+
+layout = {
+    'title':'Bitcoin Historical Price',
+    'xaxis':{'title':'Date'}
+}
+
+fig = go.Figure(data = candle_data, layout = layout)
+fig.update_layout(xaxis_rangeslider_visible = False)
+fig.show()
